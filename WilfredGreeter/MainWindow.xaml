@@ -14,9 +14,9 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
     
-        <Label Grid.Row="0" HorizontalAlignment="Center" FontSize="55">Wilfred says:</Label>
-        <Image Grid.Row="1" StretchDirection ="Both" Source="Resources/Wilfred.png"></Image>
-        <Label Grid.Row="2" Foreground="Red" x:Name="Message"  HorizontalAlignment="Center" FontSize="55" FontStyle="Italic"  Content="{Binding Message}"></Label>
+        <Label Grid.Row="0" x:Name="HeaderText" HorizontalAlignment="Center" FontSize="55">Wilfred says:</Label>
+        <Image Grid.Row="1" x:Name="Wilfred"  StretchDirection ="Both" Source="Resources/Wilfred.png"></Image>
+        <Label Grid.Row="2" Foreground="Red" x:Name="Message"  HorizontalAlignment="Center" FontSize="55" FontStyle="Italic"></Label>
     
     </Grid>
 </Window> 

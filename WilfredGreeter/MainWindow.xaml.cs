@@ -8,9 +8,11 @@ namespace WilfredGreeter
     public partial class MainWindow
     {
         private readonly WindowHider _windowHider;
+        private readonly ImageLoader _imageLoader;
         private readonly MessageFileWatcher _messageWatcher;
         private readonly SoundPlayer _soundPlayer;
         private readonly MessageLoader _messageLoader;
+        private readonly MessageLoader _headerMessageLoader;
 
         public MainWindow()
         {
@@ -19,19 +21,24 @@ namespace WilfredGreeter
             var noDisplayTimeConfigured = !double.TryParse(ConfigurationManager.AppSettings["DisplayTime"], out var displayTime);
             if (noDisplayTimeConfigured) displayTime = 6.0;
 
-            _soundPlayer = new SoundPlayer(ConfigurationManager.AppSettings["SoundFile"]);
+            _soundPlayer = new SoundPlayer(ConfigurationManager.AppSettings["SoundFileName"]);
             _windowHider = new WindowHider(this, displayTime);
 
+            var headerFilePath = ConfigurationManager.AppSettings["HeaderMessageFile"];
             var filePath = ConfigurationManager.AppSettings["MessageFile"];
             var networkPath = Path.GetDirectoryName(filePath);
+            _headerMessageLoader = new MessageLoader(headerFilePath);
             _messageLoader = new MessageLoader(filePath);
-            _messageWatcher = new MessageFileWatcher(networkPath, FileChange);
+
+            _messageWatcher = new MessageFileWatcher(networkPath, FileChange, filePath);
+            _imageLoader = new ImageLoader(ConfigurationManager.AppSettings["ImagePath"]);
 
             _windowHider.HideWindow();
             _messageWatcher.Start();
 
             StateChanged += MainWindow_StateChanged;
 
+            Wilfred.Source = _imageLoader.Image;
             Message.Content = _messageLoader.LoadMessage();
         }
 
@@ -68,7 +75,10 @@ namespace WilfredGreeter
         {
             Dispatcher.Invoke(() =>
             {
+                Wilfred.Source = _imageLoader.Image;
+                HeaderText.Content = _headerMessageLoader.LoadMessage();
                 Message.Content = _messageLoader.LoadMessage();
+
                 _windowHider.ShowWindowForDisplayTime(() => { });
                 _soundPlayer.PlaySound();
             });

@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ImageLoader.cs" />
     <Compile Include="MessageFileWatcher.cs" />
     <Compile Include="MessageLoader.cs" />
     <Compile Include="SoundPlayer.cs" />
